@@ -1,6 +1,6 @@
 terraform {
 	backend "gcs" {
-		bucket  = "danielhess-me"
+		bucket  = "danielhess-me-infra"
 		prefix  = "terraform/testing"
 		project = "danielhess-me"
 	}
