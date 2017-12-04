@@ -17,3 +17,6 @@ resource "google_storage_bucket" "new-site" {
 		not_found_page   = "index.html"
 	}
 }
+
+// TODO: Once the GCP provider supports IAM Roles for buckets, add steps to
+// make the buckets public to read from
