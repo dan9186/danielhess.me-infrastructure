@@ -62,5 +62,4 @@ resource "google_compute_backend_bucket" "testing_site_backend" {
 	name        = "testing-site-backend-bucket"
 	description = "Backend Bucket for testing site"
 	bucket_name = "${google_storage_bucket.testing_site_bucket.name}"
-	enable_cdn  = true
 }
