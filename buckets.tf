@@ -1,5 +1,5 @@
-resource "google_storage_bucket" "www-site" {
-	name     = "www.danielhess.me"
+resource "google_storage_bucket" "prod_site_bucket" {
+	name     = "${replace("${var.domain}", ".", "-")}-prod-site"
 	location = "${var.region}"
 
 	website {
@@ -8,8 +8,8 @@ resource "google_storage_bucket" "www-site" {
 	}
 }
 
-resource "google_storage_bucket" "new-site" {
-	name     = "new.danielhess.me"
+resource "google_storage_bucket" "testing_site_bucket" {
+	name     = "${replace("${var.domain}", ".", "-")}-testing-site"
 	location = "${var.region}"
 
 	website {
