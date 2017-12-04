@@ -11,7 +11,7 @@ resource "google_dns_record_set" "prod_dns" {
 
 	managed_zone = "${google_dns_managed_zone.domain.name}"
 
-	rrdatas = ["${google_compute_global_forwarding_rule.www_site_forwarding_rule.ip_address}"]
+	rrdatas = ["${google_compute_global_forwarding_rule.site_forwarding_rule.ip_address}"]
 }
 
 resource "google_dns_record_set" "testing_dns" {
@@ -21,7 +21,7 @@ resource "google_dns_record_set" "testing_dns" {
 
 	managed_zone = "${google_dns_managed_zone.domain.name}"
 
-	rrdatas = ["c.storage.googleapis.com."]
+	rrdatas = ["${google_compute_global_forwarding_rule.site_forwarding_rule.ip_address}"]
 }
 
 resource "google_dns_record_set" "mail_record" {
