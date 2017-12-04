@@ -6,8 +6,6 @@ resource "google_storage_bucket" "www-site" {
 		main_page_suffix = "index.html"
 		not_found_page   = "index.html"
 	}
-
-	depends_on = [ "google_dns_managed_zone.domain" ]
 }
 
 resource "google_storage_bucket" "new-site" {
@@ -18,6 +16,4 @@ resource "google_storage_bucket" "new-site" {
 		main_page_suffix = "index.html"
 		not_found_page   = "index.html"
 	}
-
-	depends_on = [ "google_dns_managed_zone.domain" ]
 }
