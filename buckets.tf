@@ -18,5 +18,14 @@ resource "google_storage_bucket" "testing_site_bucket" {
 	}
 }
 
-// TODO: Once the GCP provider supports IAM Roles for buckets, add steps to
-// make the buckets public to read from
+resource "google_storage_bucket_iam_member" "prod_site_iam_member" {
+	bucket = "${google_storage_bucket.prod_site_bucket.name}"
+	role   = "roles/storage.objectViewer"
+	member = "allUsers"
+}
+
+resource "google_storage_bucket_iam_member" "testing_site_iam_member" {
+	bucket = "${google_storage_bucket.testing_site_bucket.name}"
+	role   = "roles/storage.objectViewer"
+	member = "allUsers"
+}
