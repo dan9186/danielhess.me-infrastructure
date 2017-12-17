@@ -1,7 +1,7 @@
-resource "google_dns_managed_zone" "domain" {
-	name        = "managed-domain"
+resource "google_dns_managed_zone" "zone" {
+	name        = "${var.domain}-zone"
 	dns_name    = "${var.domain}."
-	description = "Domain Name"
+	description = "Managed zone for ${var.domain}"
 }
 
 resource "google_dns_record_set" "prod_dns" {
@@ -9,7 +9,7 @@ resource "google_dns_record_set" "prod_dns" {
 	type = "A"
 	ttl  = 300
 
-	managed_zone = "${google_dns_managed_zone.domain.name}"
+	managed_zone = "${google_dns_managed_zone.zone.name}"
 
 	rrdatas = ["${google_compute_global_forwarding_rule.site_forwarding_rule.ip_address}"]
 }
@@ -19,17 +19,17 @@ resource "google_dns_record_set" "testing_dns" {
 	type = "A"
 	ttl  = 300
 
-	managed_zone = "${google_dns_managed_zone.domain.name}"
+	managed_zone = "${google_dns_managed_zone.zone.name}"
 
 	rrdatas = ["${google_compute_global_forwarding_rule.site_forwarding_rule.ip_address}"]
 }
 
 resource "google_dns_record_set" "mail_record" {
-	name = "@.${google_dns_managed_zone.domain.dns_name}"
+	name = "@.${google_dns_managed_zone.zone.dns_name}"
 	type = "MX"
 	ttl  = 300
 
-	managed_zone = "${google_dns_managed_zone.domain.name}"
+	managed_zone = "${google_dns_managed_zone.zone.name}"
 
 	rrdatas = [
 		"1 aspmx.l.google.com.",
