@@ -30,8 +30,8 @@ resource "google_storage_bucket" "testing_site_bucket" {
 	location = "${var.region}"
 
 	website {
-		main_page_suffix = "index.html"
-		not_found_page   = "index.html"
+		main_page_suffix = "${var.main_page_suffix}"
+		not_found_page   = "${var.not_found_page}"
 	}
 }
 
