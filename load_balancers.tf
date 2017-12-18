@@ -51,4 +51,35 @@ resource "google_compute_url_map" "sites_url_map" {
 			service = "${module.danielhess-me.testing_backend}"
 		}
 	}
+
+	// fowlmouthwings.com mappings
+	host_rule {
+		hosts        = ["${module.fowlmouthwings-com.prod_dns}"]
+		path_matcher = "fowlmouthwings-com-prod-paths"
+	}
+
+	path_matcher {
+		name            = "fowlmouthwings-com-prod-paths"
+		default_service = "${module.fowlmouthwings-com.prod_backend}"
+
+		path_rule {
+			paths   = ["/*"]
+			service = "${module.fowlmouthwings-com.prod_backend}"
+		}
+	}
+
+	host_rule {
+		hosts        = ["${module.fowlmouthwings-com.testing_dns}"]
+		path_matcher = "fowlmouthwings-com-testing-paths"
+	}
+
+	path_matcher {
+		name            = "fowlmouthwings-com-testing-paths"
+		default_service = "${module.fowlmouthwings-com.testing_backend}"
+
+		path_rule {
+			paths   = ["/*"]
+			service = "${module.fowlmouthwings-com.testing_backend}"
+		}
+	}
 }

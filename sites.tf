@@ -9,3 +9,15 @@ module "danielhess-me" {
 	main_page_suffix  = "index.html"
 	not_found_page    = "index.html"
 }
+
+module "fowlmouthwings-com" {
+	source = "./modules/site"
+
+	domain            = "fowlmouthwings.com"
+	prod_subdomain    = "www"
+	testing_subdomain = "new"
+	region            = "${var.region}"
+	ip_addresses      = ["${google_compute_global_forwarding_rule.sites_forwarding_rule.ip_address}"]
+	main_page_suffix  = "index.html"
+	not_found_page    = "404.html"
+}
