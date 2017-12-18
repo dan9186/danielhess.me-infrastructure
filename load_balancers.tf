@@ -1,65 +1,54 @@
-resource "google_compute_global_forwarding_rule" "site_forwarding_rule" {
-	name       = "site-forwarding-rule"
-	target     = "${google_compute_target_http_proxy.site_loadbalancer.self_link}"
-	port_range = "80"
-}
-
-resource "google_compute_target_http_proxy" "site_loadbalancer" {
-	name        = "site-loadbalancer"
-	description = "Load Balancer for site"
-	url_map     = "${google_compute_url_map.site_url_map.self_link}"
+resource "google_compute_target_http_proxy" "sites_loadbalancer" {
+	name        = "sites-loadbalancer"
+	description = "Load Balancer for sites"
+	url_map     = "${google_compute_url_map.sites_url_map.self_link}"
 
 	lifecycle = {
 		create_before_destroy = true
 	}
 }
 
-resource "google_compute_url_map" "site_url_map" {
-	name        = "site-url-map"
-	description = "URL Map"
+resource "google_compute_global_forwarding_rule" "sites_forwarding_rule" {
+	name       = "sites-forwarding-rule"
+	target     = "${google_compute_target_http_proxy.sites_loadbalancer.self_link}"
+	port_range = "80"
+}
 
-	default_service = "${google_compute_backend_bucket.prod_site_backend.self_link}"
+resource "google_compute_url_map" "sites_url_map" {
+	name        = "sites-url-map"
+	description = "URL Map for Sites"
 
+	default_service = "${module.danielhess-me.prod_backend}"
+
+
+	// danielhess.me mappings
 	host_rule {
-		hosts        = ["${var.prod_subdomain}.${var.domain}"]
-		path_matcher = "prodpaths"
-	}
-
-	host_rule {
-		hosts        = ["${var.testing_subdomain}.${var.domain}"]
-		path_matcher = "testingpaths"
+		hosts        = ["${module.danielhess-me.prod_dns}"]
+		path_matcher = "danielhess-me-prod-paths"
 	}
 
 	path_matcher {
-		name            = "prodpaths"
-		default_service = "${google_compute_backend_bucket.prod_site_backend.self_link}"
+		name            = "danielhess-me-prod-paths"
+		default_service = "${module.danielhess-me.prod_backend}"
 
 		path_rule {
 			paths   = ["/*"]
-			service = "${google_compute_backend_bucket.prod_site_backend.self_link}"
+			service = "${module.danielhess-me.prod_backend}"
 		}
+	}
+
+	host_rule {
+		hosts        = ["${module.danielhess-me.testing_dns}"]
+		path_matcher = "danielhess-me-testing-paths"
 	}
 
 	path_matcher {
-		name            = "testingpaths"
-		default_service = "${google_compute_backend_bucket.testing_site_backend.self_link}"
+		name            = "danielhess-me-testing-paths"
+		default_service = "${module.danielhess-me.testing_backend}"
 
 		path_rule {
 			paths   = ["/*"]
-			service = "${google_compute_backend_bucket.testing_site_backend.self_link}"
+			service = "${module.danielhess-me.testing_backend}"
 		}
 	}
-}
-
-resource "google_compute_backend_bucket" "prod_site_backend" {
-	name        = "prod-site-backend-bucket"
-	description = "Backend Bucket for prod site"
-	bucket_name = "${google_storage_bucket.prod_site_bucket.name}"
-	enable_cdn  = true
-}
-
-resource "google_compute_backend_bucket" "testing_site_backend" {
-	name        = "testing-site-backend-bucket"
-	description = "Backend Bucket for testing site"
-	bucket_name = "${google_storage_bucket.testing_site_bucket.name}"
 }

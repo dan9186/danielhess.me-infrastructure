@@ -1,5 +1,5 @@
 resource "google_dns_managed_zone" "zone" {
-	name        = "${var.domain}-zone"
+	name        = "${replace("${var.domain}", ".", "-")}-zone"
 	dns_name    = "${var.domain}."
 	description = "Managed zone for ${var.domain}"
 }
@@ -11,7 +11,11 @@ resource "google_dns_record_set" "prod_dns" {
 
 	managed_zone = "${google_dns_managed_zone.zone.name}"
 
-	rrdatas = ["${google_compute_global_forwarding_rule.site_forwarding_rule.ip_address}"]
+	rrdatas = ["${var.ip_addresses}"]
+}
+
+output "prod_dns" {
+	value = "${var.prod_subdomain}.${var.domain}"
 }
 
 resource "google_dns_record_set" "testing_dns" {
@@ -21,7 +25,11 @@ resource "google_dns_record_set" "testing_dns" {
 
 	managed_zone = "${google_dns_managed_zone.zone.name}"
 
-	rrdatas = ["${google_compute_global_forwarding_rule.site_forwarding_rule.ip_address}"]
+	rrdatas = ["${var.ip_addresses}"]
+}
+
+output "testing_dns" {
+	value = "${var.testing_subdomain}.${var.domain}"
 }
 
 resource "google_dns_record_set" "mail_record" {

@@ -7,7 +7,6 @@ terraform {
 }
 
 provider "google" {
-	credentials = "${var.creds}"
 	project     = "${var.project}"
 	region      = "${var.region}"
 }

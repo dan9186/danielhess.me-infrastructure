@@ -1,6 +1,3 @@
 project           = "danielhess-me"
 region            = "us-central1"
 zone              = "us-central1-c"
-domain            = "danielhess.me"
-prod_subdomain    = "www"
-testing_subdomain = "new"
